@@ -1,47 +1,48 @@
 import express, { Express, Request, Response } from 'express';
+import { ErrorCodes } from './errorCodes';
+import { User } from './user';
+import { Task } from './task';
 
 const app: Express = express();
 const port = 3000;
 
-interface User {
-  id: number
-  name: string
+const users: User[] = [
+  { id: 1, name: 'Pepe' },
+  { id: 2, name: 'Paco' },
+];
+
+function existsUserWithId(userId: number): boolean {
+  for (const user of users) {
+    if (user.id == userId) {
+      return true;
+    }
+  }
+  return false;
 }
 
-interface Task {
-  id: number
-  description: string
-  done: boolean
-}
-
-interface UsersDb {
-  [userId: number]: User
-}
-
-interface TasksDb {
-  [userId: number]: Task[]
-}
-
-const users: UsersDb = {
-  1: {
+const tasks: Task[] = [
+  {
     id: 1,
-    name: 'Pepe',
+    userId: 1,
+    description: 'Buy milk',
+    done: false,
   },
-  2: {
-    id: 2,
-    name: 'Paco',
-  },
-}
+];
 
-const tasks: TasksDb = {
-  1: [ ],
-  2: [ ],
+function filterTasksByUserId(userId: number): Task[] {
+  return tasks.filter(x => x.userId === userId);
 }
 
 app.get('/users/:userId/tasks', (req: Request, res: Response) => {
   const userId = Number(req.params.userId);
-  // FIXME: Handle errors!!
-  res.send(JSON.stringify(tasks[userId]));
+
+  if (existsUserWithId(userId)) {
+    res.send(JSON.stringify(filterTasksByUserId(userId)));
+  } else {
+    res.status(404).send(JSON.stringify({
+      'code': ErrorCodes.UNKNOWN_USER,
+    }));
+  }
 });
 
 app.listen(port, () => {
