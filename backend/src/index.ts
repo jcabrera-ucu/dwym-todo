@@ -3,7 +3,9 @@ import { ErrorCodes } from './errorCodes';
 import { User } from './user';
 import { Task } from './task';
 
+
 const app: Express = express();
+app.use(express.json());
 const port = 3000;
 
 const users: User[] = [
@@ -13,7 +15,7 @@ const users: User[] = [
 
 function existsUserWithId(userId: number): boolean {
   for (const user of users) {
-    if (user.id == userId) {
+    if (user.id === userId) {
       return true;
     }
   }
@@ -43,6 +45,30 @@ app.get('/users/:userId/tasks', (req: Request, res: Response) => {
       'code': ErrorCodes.UNKNOWN_USER,
     }));
   }
+});
+
+
+app.post('/users/:userId/tasks', (req: Request, res: Response) => {
+  const userId = Number(req.params.userId);
+  const { description, done } = req.body;
+
+  const userExists = users.some((user) => user.id === userId);
+  if (!userExists) {
+    return res.status(404).send(JSON.stringify({
+      'code': ErrorCodes.UNKNOWN_USER,
+    }));
+  }
+
+  const newTask: Task = {
+    id: tasks.length + 1,
+    userId,
+    description,
+    done,
+  };
+
+  tasks.push(newTask);
+
+  return res.status(201).json(newTask);
 });
 
 app.listen(port, () => {
