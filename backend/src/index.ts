@@ -16,6 +16,12 @@ const users: User[] = [
     {id: 2, name: 'Paco'},
 ];
 
+/**
+ * Check the existance of a user in the users db.
+ * 
+ * @param userId Id of the user to look for
+ * @returns true if the user exists, false otherwise.
+ */
 function existsUserWithId(userId: number): boolean {
     for (const user of users) {
         if (user.id === userId) {
@@ -34,6 +40,12 @@ const tasks: Task[] = [
     },
 ];
 
+/**
+ * Get the tasks list for a given user.
+ * 
+ * @param userId The id of the user to get the tasks for
+ * @returns A list of Tasks
+ */
 function filterTasksByUserId(userId: number): Task[] {
     return tasks.filter(x => x.userId === userId);
 }
@@ -73,6 +85,9 @@ app.put('/users/:userId/task/:taskId', (req: Request, res: Response) => {
     res.status(201).json(task);
 });
 
+/**
+ * Get all the tasks for a given user.
+ */
 app.get('/users/:userId/tasks', (req: Request, res: Response) => {
     const userId = Number(req.params.userId);
 
