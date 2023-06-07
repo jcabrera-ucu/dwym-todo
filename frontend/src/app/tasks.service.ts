@@ -9,6 +9,6 @@ export class TasksService {
   constructor(private http: HttpClient) {}
 
   public addTask(data: string, id: number){
-      return this.http.post('${this.url}/user/:${id}/tasks', data)
+      return this.http.post(`${this.url}/user/${id}/tasks`, data)
   }
 }
