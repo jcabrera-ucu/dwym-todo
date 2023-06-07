@@ -2,12 +2,12 @@ import express, { Express, Request, Response } from 'express';
 import { ErrorCodes } from './errorCodes';
 import { User } from './user';
 import { Task } from './task';
-import bodyParser from "body-parser";
+
 
 const app: Express = express();
 const port = 3000;
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
 
 const users: User[] = [
     {id: 1, name: 'Pepe'},
@@ -46,6 +46,30 @@ app.get('/users/:userId/tasks', (req: Request, res: Response) => {
             'code': ErrorCodes.UNKNOWN_USER,
         }));
     }
+});
+
+
+app.post('/users/:userId/tasks', (req: Request, res: Response) => {
+  const userId = Number(req.params.userId);
+  const { description, done } = req.body;
+
+  const userExists = users.some((user) => user.id === userId);
+  if (!userExists) {
+    return res.status(404).send(JSON.stringify({
+      'code': ErrorCodes.UNKNOWN_USER,
+    }));
+  }
+
+  const newTask: Task = {
+    id: tasks.length + 1,
+    userId,
+    description,
+    done,
+  };
+
+  tasks.push(newTask);
+
+  return res.status(201).json(newTask);
 });
 
 app.listen(port, () => {
