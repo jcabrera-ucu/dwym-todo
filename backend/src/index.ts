@@ -36,6 +36,41 @@ function filterTasksByUserId(userId: number): Task[] {
     return tasks.filter(x => x.userId === userId);
 }
 
+app.put('/users/:userId/task/:taskId', (req: Request, res: Response) => {
+    const userId = Number(req.params.userId);
+    const taskId = Number(req.params.taskId);
+
+    if (!existsUserWithId(userId)) {
+        res.status(404).send(JSON.stringify({
+            'code': ErrorCodes.UNKNOWN_USER,
+        }));
+        return;
+    }
+
+    const userTasks = filterTasksByUserId(userId);
+    const task = userTasks.find(t => t.id === taskId);
+
+    if (!task) {
+        res.status(404).send(JSON.stringify({
+            'code': ErrorCodes.UNKNOWN_TASK,
+        }));
+        return;
+    }
+
+    const {description, done} = req.body;
+
+    if (!description || (done !== false && done !== true)) {
+        res.status(400).send(JSON.stringify({
+            'code': ErrorCodes.INCORRECT_TYPES
+        }));
+    }
+
+    task.description = description;
+    task.done = done;
+
+    res.status(201).json(task);
+});
+
 app.get('/users/:userId/tasks', (req: Request, res: Response) => {
     const userId = Number(req.params.userId);
 
@@ -50,26 +85,26 @@ app.get('/users/:userId/tasks', (req: Request, res: Response) => {
 
 
 app.post('/users/:userId/tasks', (req: Request, res: Response) => {
-  const userId = Number(req.params.userId);
-  const { description, done } = req.body;
+    const userId = Number(req.params.userId);
+    const {description, done} = req.body;
 
-  const userExists = users.some((user) => user.id === userId);
-  if (!userExists) {
-    return res.status(404).send(JSON.stringify({
-      'code': ErrorCodes.UNKNOWN_USER,
-    }));
-  }
+    const userExists = users.some((user) => user.id === userId);
+    if (!userExists) {
+        return res.status(404).send(JSON.stringify({
+            'code': ErrorCodes.UNKNOWN_USER,
+        }));
+    }
 
-  const newTask: Task = {
-    id: tasks.length + 1,
-    userId,
-    description,
-    done,
-  };
+    const newTask: Task = {
+        id: tasks.length + 1,
+        userId,
+        description,
+        done,
+    };
 
-  tasks.push(newTask);
+    tasks.push(newTask);
 
-  return res.status(201).json(newTask);
+    return res.status(201).json(newTask);
 });
 
 app.listen(port, () => {
