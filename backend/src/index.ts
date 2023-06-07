@@ -58,15 +58,17 @@ app.delete('/users/:userId/tasks/:id', function (req, res) {
   const taskId = Number(req.params.id)
   const response = { status: 200, msg: "deleted task" };
 
-  for (const task of tasks) {
-    if (task.id == taskId && task.userId == userId) {
-      task.description = "";
-      res.send(response);
-    }
-    else {
-      res.status(404).send(JSON.stringify({
-        'code': ErrorCodes.UNKNOWN_TASK,
-      }));
-    }
+  let taskToDelete = tasks.find(t => t.id === taskId);
+
+  const indexToDelete = tasks.findIndex(task => task.id === taskId);
+
+  if (taskToDelete) {
+    tasks.splice(indexToDelete);
+    res.send(response);
+  }
+  else {
+    res.status(404).send(JSON.stringify({
+      'code': ErrorCodes.UNKNOWN_TASK,
+    }));
   }
 });
