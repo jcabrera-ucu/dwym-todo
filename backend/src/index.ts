@@ -2,15 +2,17 @@ import express, { Express, Request, Response } from 'express';
 import { ErrorCodes } from './errorCodes';
 import { User } from './user';
 import { Task } from './task';
-import { arrayBuffer } from 'stream/consumers';
-import { json } from 'body-parser';
-
 
 const app: Express = express();
+// The port in which the application will be listening
 const port = 3000;
 
+// Use express.json() to parse the body of every request to a json object.
 app.use(express.json());
 
+/**
+ * List of users.
+ */
 const users: User[] = [
   { id: 1, name: 'Pepe' },
   { id: 2, name: 'Paco' },
@@ -31,6 +33,9 @@ function existsUserWithId(userId: number): boolean {
   return false;
 }
 
+/**
+ * List of tasks.
+ */
 const tasks: Task[] = [
   {
     id: 1,
@@ -50,6 +55,10 @@ function filterTasksByUserId(userId: number): Task[] {
   return tasks.filter(x => x.userId === userId);
 }
 
+/**
+ * Edits a given user's task by its id.
+ * The body needs to specify a value for description, and a value for done.
+ */
 app.put('/users/:userId/task/:taskId', (req: Request, res: Response) => {
   const userId = Number(req.params.userId);
   const taskId = Number(req.params.taskId);
@@ -100,7 +109,9 @@ app.get('/users/:userId/tasks', (req: Request, res: Response) => {
   }
 });
 
-
+/**
+ * Creates a new task for the given user.
+ */
 app.post('/users/:userId/tasks', (req: Request, res: Response) => {
   const userId = Number(req.params.userId);
   const { description, done } = req.body;
@@ -124,6 +135,9 @@ app.post('/users/:userId/tasks', (req: Request, res: Response) => {
   return res.status(201).json(newTask);
 });
 
+/**
+ * Sets the application to listen to the port specified at the top of the page.
+ */
 app.listen(port, () => {
   // tslint:disable-next-line
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
