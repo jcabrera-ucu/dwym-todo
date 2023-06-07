@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import { ErrorCodes } from './errorCodes';
 import { User } from './user';
 import { Task } from './task';
+import { arrayBuffer } from 'stream/consumers';
 
 const app: Express = express();
 const port = 3000;
@@ -20,7 +21,18 @@ function existsUserWithId(userId: number): boolean {
   return false;
 }
 
-const tasks: Task[] = [
+function existsTaskWithId(userId: number, taskId: number): boolean {
+  for (const task of tasks) {
+    if (task.id == taskId) {
+      if (task.userId = userId) {
+        return true
+      }
+    }
+  }
+  return false;
+}
+
+var tasks: Task[] = [
   {
     id: 1,
     userId: 1,
@@ -49,3 +61,17 @@ app.listen(port, () => {
   // tslint:disable-next-line
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
+
+app.delete('/users/:userId/tasks/:id', function (req, res) {
+  const userId = Number(req.params.userId);
+  const taskId = Number(req.params.id)
+  let currentTasks: Task[] = [];
+  const response = { error: false, msg: "deleted" };
+  if (existsTaskWithId(userId, taskId)) {
+    currentTasks = tasks.filter(taskId => +taskId != +req.params.id)
+  }
+  tasks = currentTasks;
+  res.json(response);
+});
+
+
