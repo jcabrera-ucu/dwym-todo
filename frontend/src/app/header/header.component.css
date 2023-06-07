@@ -1,0 +1,30 @@
+.container-input {
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    margin-right: 70%;
+}
+
+.container-users {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.input-create {
+    flex-grow: 1;
+    padding: 5px;
+}
+
+.button-create {
+    margin-left: 10px;
+}
+
+.active {
+    background-color: green;
+    color: white;
+  }
+  
+  .inactive {
+    background-color: gray;
+    color: black;
+  }
