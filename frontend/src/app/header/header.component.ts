@@ -7,8 +7,10 @@ import { TasksService } from '../tasks.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+  isActiveUser1 : boolean = false;
+  isActiveUser2 : boolean = false;
 
-  id: number = 0;
+  id: number = 1;
   description: string = '';
   selectUser(id: number) {
     this.id = id;

@@ -19,11 +19,12 @@
     margin-left: 10px;
 }
 
-.user-buttons {
-    display: flex;
-}
-
-.button-user1,
-.button-user2 {
-    margin-left: 10px;
-}
+.active {
+    background-color: green;
+    color: white;
+  }
+  
+  .inactive {
+    background-color: gray;
+    color: black;
+  }

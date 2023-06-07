@@ -1,6 +1,6 @@
 <div container-users>
-    <button class="button-user1" (click)="selectUser(1)">User1</button>
-    <button class="button-user2" (click)="selectUser(2)">User2</button>
+    <button [ngClass]="{'active': isActiveUser1, 'inactive': !isActiveUser1}"(click)="selectUser(1)">User1</button>
+    <button [ngClass]="{'active': isActiveUser2, 'inactive': !isActiveUser2}" (click)="selectUser(2)">User2</button>
 </div>
 <div class="container-input">
     <input type="text" class="input-create" placeholder="Ingrese su descripción" [(ngModel)]="description">
