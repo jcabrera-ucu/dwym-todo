@@ -2,6 +2,8 @@ import express, { Express, Request, Response } from 'express';
 import { ErrorCodes } from './errorCodes';
 import { User } from './user';
 import { Task } from './task';
+import { arrayBuffer } from 'stream/consumers';
+import { json } from 'body-parser';
 
 
 const app: Express = express();
@@ -110,4 +112,25 @@ app.post('/users/:userId/tasks', (req: Request, res: Response) => {
 app.listen(port, () => {
     // tslint:disable-next-line
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+});
+
+
+app.delete('/users/:userId/tasks/:id', function (req, res) {
+  const userId = Number(req.params.userId);
+  const taskId = Number(req.params.id)
+  const response = { status: 200, msg: "deleted task" };
+
+  let taskToDelete = tasks.find(t => t.id === taskId);
+
+  const indexToDelete = tasks.findIndex(task => task.id === taskId);
+
+  if (taskToDelete) {
+    tasks.splice(indexToDelete);
+    res.send(response);
+  }
+  else {
+    res.status(404).send(JSON.stringify({
+      'code': ErrorCodes.UNKNOWN_TASK,
+    }));
+  }
 });
