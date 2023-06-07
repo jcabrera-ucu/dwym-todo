@@ -2,8 +2,6 @@ import express, { Express, Request, Response } from 'express';
 import { ErrorCodes } from './errorCodes';
 import { User } from './user';
 import { Task } from './task';
-import { arrayBuffer } from 'stream/consumers';
-import { json } from 'body-parser';
 
 
 const app: Express = express();
@@ -38,6 +36,10 @@ function filterTasksByUserId(userId: number): Task[] {
     return tasks.filter(x => x.userId === userId);
 }
 
+/**
+ * Edits a given user's task by its id.
+ * The body needs to specify a value for description, and a value for done.
+ */
 app.put('/users/:userId/task/:taskId', (req: Request, res: Response) => {
     const userId = Number(req.params.userId);
     const taskId = Number(req.params.taskId);
