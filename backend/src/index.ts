@@ -2,9 +2,12 @@ import express, { Express, Request, Response } from 'express';
 import { ErrorCodes } from './errorCodes';
 import { User } from './user';
 import { Task } from './task';
+import bodyParser from "body-parser";
 
 const app: Express = express();
 const port = 3000;
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 const users: User[] = [
     {id: 1, name: 'Pepe'},
