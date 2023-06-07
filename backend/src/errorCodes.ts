@@ -1,3 +1,4 @@
+//error codes are used to throws a message.
 enum ErrorCodes {
   UNKNOWN_USER = 'unknown_user',
   UNKNOWN_TASK = 'unknown_task',
@@ -5,5 +6,5 @@ enum ErrorCodes {
 }
 
 export {
-    ErrorCodes,
+  ErrorCodes,
 }
